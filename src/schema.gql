@@ -1,0 +1,61 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auth {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type User {
+  id: Int!
+  username: String!
+
+  """email of the user"""
+  email: String!
+}
+
+type AccessToken {
+  accessToken: String!
+}
+
+type PostMessage {
+  msg: String!
+}
+
+type Query {
+  profile: User!
+  users: [User!]!
+  post: PostMessage!
+  auth(id: Int!): Auth!
+}
+
+type Mutation {
+  register(registerInput: RegisterInput!): User!
+  login(loginInput: LoginInput!): AccessToken!
+  updateAuth(updateAuthInput: UpdateAuthInput!): Auth!
+  removeAuth(id: Int!): Auth!
+}
+
+input RegisterInput {
+  """username"""
+  username: String!
+
+  """email"""
+  email: String!
+
+  """password"""
+  password: String!
+}
+
+input LoginInput {
+  """email"""
+  email: String!
+
+  """password"""
+  password: String!
+}
+
+input UpdateAuthInput {
+  id: Int!
+}
