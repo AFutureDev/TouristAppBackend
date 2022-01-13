@@ -20,3 +20,9 @@ export class LoginInput {
   @Field({ description: 'password' })
   password: string;
 }
+
+@InputType()
+export class GoogleSignInInput {
+  @Field({ description: 'idToken' })
+  idToken: string;
+}

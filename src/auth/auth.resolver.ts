@@ -9,7 +9,11 @@ import {
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { Auth } from './entities/auth.entity';
-import { LoginInput, RegisterInput } from './dto/create-auth.input';
+import {
+  GoogleSignInInput,
+  LoginInput,
+  RegisterInput,
+} from './dto/create-auth.input';
 import { UpdateAuthInput } from './dto/update-auth.input';
 import { User } from './entities/user.entity';
 import { AccessToken } from './entities/access-token.entity';
@@ -35,6 +39,13 @@ export class AuthResolver {
   @Mutation(() => AccessToken)
   login(@Args('loginInput') loginInput: LoginInput) {
     return this.authService.login(loginInput);
+  }
+
+  @Mutation(() => AccessToken)
+  googleSignIn(
+    @Args('googleSignInInput') googleSignInInput: GoogleSignInInput,
+  ) {
+    return this.authService.googleSignIn(googleSignInInput.idToken);
   }
 
   @Query(() => User)

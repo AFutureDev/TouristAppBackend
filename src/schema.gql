@@ -33,6 +33,7 @@ type Query {
 type Mutation {
   register(registerInput: RegisterInput!): User!
   login(loginInput: LoginInput!): AccessToken!
+  googleSignIn(googleSignInInput: GoogleSignInInput!): AccessToken!
   updateAuth(updateAuthInput: UpdateAuthInput!): Auth!
   removeAuth(id: Int!): Auth!
 }
@@ -54,6 +55,11 @@ input LoginInput {
 
   """password"""
   password: String!
+}
+
+input GoogleSignInInput {
+  """idToken"""
+  idToken: String!
 }
 
 input UpdateAuthInput {

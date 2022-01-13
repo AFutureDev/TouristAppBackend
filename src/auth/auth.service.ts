@@ -5,6 +5,11 @@ import { LoginInput, RegisterInput } from './dto/create-auth.input';
 import { UpdateAuthInput } from './dto/update-auth.input';
 import { AccessToken } from './entities/access-token.entity';
 import { User } from './entities/user.entity';
+import { OAuth2Client } from 'google-auth-library';
+
+const CLIENT_ID =
+  '634893355227-5okafvnailq49vf47p4t8emfi4j7hnts.apps.googleusercontent.com';
+const googleClient = new OAuth2Client(CLIENT_ID);
 
 @Injectable()
 export class AuthService {
@@ -83,5 +88,43 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  async googleSignIn(idToken: string): Promise<AccessToken> {
+    let email: string;
+    try {
+      const ticket = await googleClient.verifyIdToken({
+        idToken: idToken,
+        audience: CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      email = payload.email;
+    } catch (e) {
+      throw new BadRequestException(`Invalid idToken`);
+    }
+    const user = await this.prisma.user.findUnique({
+      where: { email: email },
+    });
+    if (user) {
+      const payload = this.jwtService.sign({
+        userId: user.id,
+        email: user.email,
+      });
+
+      return { accessToken: payload };
+    }
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: email,
+        password: '',
+        username: email.split('@')[0],
+      },
+    });
+    const payload2 = this.jwtService.sign({
+      userId: newUser.id,
+      email: newUser.email,
+    });
+
+    return { accessToken: payload2 };
   }
 }
